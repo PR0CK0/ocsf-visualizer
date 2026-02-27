@@ -159,4 +159,4 @@ MIT
 
 ## Credits
 
-Concept and design by [@tylerprocko](https://github.com/tylerprocko). Code written by [Claude Sonnet](https://claude.ai) (Anthropic).
+Concept and design by Tyler T. Procko. Code written by [Claude Sonnet](https://claude.ai) (Anthropic).
