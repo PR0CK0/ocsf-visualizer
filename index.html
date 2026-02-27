@@ -148,9 +148,9 @@ body {
   scrollbar-color: var(--border) transparent;
 }
 
-#detail-panel.collapsed {
-  width: 20px !important;
-  min-width: unset !important;
+#main #detail-panel.collapsed {
+  width: 20px;
+  min-width: 0;
 }
 
 .detail-empty {
@@ -356,9 +356,10 @@ body {
     flex-direction: column;
   }
 
-  #detail-panel.collapsed {
-    width: 100% !important;
-    height: 24px !important;
+  #main #detail-panel.collapsed {
+    width: 100%;
+    min-width: 0;
+    height: 24px;
   }
 
   #panel-toggle {
