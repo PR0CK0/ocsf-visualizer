@@ -2,7 +2,7 @@
 
 An interactive, browser-based graph explorer for the [Open Cybersecurity Schema Framework (OCSF)](https://schema.ocsf.io) schema. No build step, no dependencies to install — just a single `index.html`.
 
-**[Live demo →](https://your-username.github.io/ocsf-visualizer)** *(replace with your GitHub Pages URL)*
+**[Live demo →](http://procko.pro/ocsf-visualizer/)**
 
 ---
 
