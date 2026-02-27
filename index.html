@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>OCSF Schema Visualizer</title>
 <script src="https://unpkg.com/cytoscape@3.29.2/dist/cytoscape.min.js"></script>
 <style>
@@ -25,7 +25,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background: var(--bg);
   color: var(--text);
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -325,6 +325,7 @@ body {
   align-items: center;
   gap: 14px;
   padding: 5px 16px;
+  padding-bottom: max(5px, env(safe-area-inset-bottom));
   background: var(--surface);
   border-top: 1px solid var(--border);
   flex-shrink: 0;
@@ -369,12 +370,7 @@ body {
     height: 28px;
     border-right: none;
     border-bottom: 1px solid var(--border);
-    border-top: 2px solid var(--accent);
     background: var(--surface2);
-  }
-
-  #main #detail-panel.collapsed {
-    border-top: 2px solid var(--accent);
   }
 
   label[for="version-select"] {
