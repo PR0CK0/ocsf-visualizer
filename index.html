@@ -118,10 +118,39 @@ body {
   width: clamp(200px, 30vw, 360px);
   background: var(--surface);
   border-left: 1px solid var(--border);
-  overflow-y: auto;
   flex-shrink: 0;
+  display: flex;
+  overflow: hidden;
+  transition: width 0.2s, height 0.2s;
+}
+
+#panel-toggle {
+  width: 20px;
+  flex-shrink: 0;
+  background: transparent;
+  border: none;
+  border-right: 1px solid var(--border);
+  color: var(--dim);
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.1s, color 0.1s;
+}
+#panel-toggle:hover { background: var(--surface2); color: var(--text); }
+
+#detail-inner {
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+}
+
+#detail-panel.collapsed {
+  width: 20px !important;
+  min-width: unset !important;
 }
 
 .detail-empty {
@@ -308,7 +337,7 @@ body {
 .l-dia  { width: 9px; height: 9px; transform: rotate(45deg); border-radius: 1px; }
 
 /* ── Portrait / mobile layout ───────────────── */
-@media (orientation: portrait) {
+@media (orientation: portrait), (max-width: 767px) {
   #main {
     flex-direction: column;
   }
@@ -324,6 +353,19 @@ body {
     height: 45%;
     border-left: none;
     border-top: 1px solid var(--border);
+    flex-direction: column;
+  }
+
+  #detail-panel.collapsed {
+    width: 100% !important;
+    height: 24px !important;
+  }
+
+  #panel-toggle {
+    width: 100%;
+    height: 24px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
   }
 
   label[for="version-select"] {
@@ -386,10 +428,13 @@ body {
   <div id="cy"></div>
 
   <div id="detail-panel">
-    <div class="detail-empty">
-      <div class="icon">◈</div>
-      <div>Select a node to view details</div>
-      <div class="hint">Click any category, event class,<br>or object in the graph</div>
+    <button id="panel-toggle" onclick="togglePanel()" title="Toggle detail panel">»</button>
+    <div id="detail-inner">
+      <div class="detail-empty">
+        <div class="icon">◈</div>
+        <div>Select a node to view details</div>
+        <div class="hint">Click any category, event class,<br>or object in the graph</div>
+      </div>
     </div>
   </div>
 
@@ -404,7 +449,7 @@ body {
   </div>
 </div>
 
-<div id="legend">
+<div id="legend" style="justify-content: space-between">
   <span>Nodes:</span>
   <div class="legend-group">
     <span class="legend-item"><span class="l-rect" style="background:#388bfd"></span> Category</span>
@@ -417,6 +462,10 @@ body {
     <span class="legend-item"><span class="l-dot" style="background:#d29922"></span> Recommended</span>
     <span class="legend-item"><span class="l-dot" style="background:#484f58"></span> Optional</span>
   </div>
+  <a id="commit-link" href="https://github.com/PR0CK0/ocsf-visualizer/commits/master"
+     target="_blank" rel="noopener"
+     style="margin-left:auto;font-size:10px;color:var(--dim);text-decoration:none;font-family:'SF Mono','Fira Code',monospace;white-space:nowrap"
+     title="View commits on GitHub">…</a>
 </div>
 
 <div id="tooltip"></div>
@@ -867,7 +916,7 @@ function renderCategoryDetail(node) {
     return cu === uid;
   });
 
-  document.getElementById('detail-panel').innerHTML = `
+  document.getElementById('detail-inner').innerHTML = `
     <div class="detail-content">
       <div class="detail-header">
         <span class="type-badge category">Category</span>
@@ -911,7 +960,7 @@ function renderNodeDetail(data, type) {
   const meta    = [uid, cat, ext].filter(Boolean).join('&nbsp;·&nbsp;');
   const dep     = data['@deprecated'];
 
-  document.getElementById('detail-panel').innerHTML = `
+  document.getElementById('detail-inner').innerHTML = `
     <div class="detail-content">
       <div class="detail-header">
         <span class="type-badge ${type}">${type === 'class' ? 'Event Class' : 'Object'}</span>
@@ -987,7 +1036,7 @@ function onSearch(q) {
 
 function setDetailLoading(node) {
   const caption = node.data('caption') || node.data('name');
-  document.getElementById('detail-panel').innerHTML = `
+  document.getElementById('detail-inner').innerHTML = `
     <div class="detail-empty">
       <div class="spinner"></div>
       <div>Loading ${caption}…</div>
@@ -995,7 +1044,7 @@ function setDetailLoading(node) {
 }
 
 function setDetailError(msg) {
-  document.getElementById('detail-panel').innerHTML = `
+  document.getElementById('detail-inner').innerHTML = `
     <div class="detail-empty">
       <div style="font-size:32px;opacity:.5;margin-bottom:8px">⚠</div>
       <div style="color:var(--required)">Failed to load details</div>
@@ -1004,7 +1053,7 @@ function setDetailError(msg) {
 }
 
 function clearDetailPanel() {
-  document.getElementById('detail-panel').innerHTML = `
+  document.getElementById('detail-inner').innerHTML = `
     <div class="detail-empty">
       <div class="icon">◈</div>
       <div>Select a node to view details</div>
@@ -1018,6 +1067,29 @@ function setLoadMark(id, state) {
 }
 
 function setStatus(t) { document.getElementById('status').textContent = t; }
+
+function isPortraitMode() {
+  return window.matchMedia('(orientation: portrait)').matches
+      || window.matchMedia('(max-width: 767px)').matches;
+}
+
+function updateToggleBtn() {
+  const btn       = document.getElementById('panel-toggle');
+  const collapsed = document.getElementById('detail-panel').classList.contains('collapsed');
+  const portrait  = isPortraitMode();
+  btn.textContent = portrait ? (collapsed ? '▴' : '▾') : (collapsed ? '«' : '»');
+}
+
+function togglePanel() {
+  document.getElementById('detail-panel').classList.toggle('collapsed');
+  updateToggleBtn();
+  setTimeout(() => S.cy && S.cy.resize(), 220);
+}
+
+window.matchMedia('(orientation: portrait)').addEventListener('change', () => {
+  updateToggleBtn();
+  setTimeout(() => S.cy && S.cy.resize(), 220);
+});
 
 function tt(x, y, text) {
   const el = document.getElementById('tooltip');
@@ -1182,6 +1254,20 @@ async function init() {
 }
 
 init();
+
+// ─── Commit SHA in footer ─────────────────────────────────────────────────────
+
+fetch('https://api.github.com/repos/PR0CK0/ocsf-visualizer/commits/master', {
+  headers: { Accept: 'application/vnd.github.v3+json' }
+})
+  .then(r => r.ok ? r.json() : null)
+  .then(data => {
+    if (!data?.sha) return;
+    const el = document.getElementById('commit-link');
+    el.textContent = data.sha.slice(0, 7);
+    el.href = `https://github.com/PR0CK0/ocsf-visualizer/commit/${data.sha}`;
+  })
+  .catch(() => {});
 </script>
 </body>
 </html>
