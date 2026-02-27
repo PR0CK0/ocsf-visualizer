@@ -937,10 +937,17 @@ function renderCategoryDetail(node) {
     return cu === uid;
   });
 
+  const catPageUrl = schemaPageUrl('category', null, name);
+
   document.getElementById('detail-inner').innerHTML = `
     <div class="detail-content">
       <div class="detail-header">
-        <span class="type-badge category">Category</span>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <span class="type-badge category" style="margin-bottom:0">Category</span>
+          <a href="${catPageUrl}" target="_blank" rel="noopener"
+             style="margin-left:auto;font-size:10px;color:var(--accent);text-decoration:none;white-space:nowrap"
+             title="Open in OCSF schema">↗ schema.ocsf.io</a>
+        </div>
         <h2>${caption || name}</h2>
         <div class="detail-meta">UID: ${uid} &nbsp;·&nbsp; ${classes.length} event classes</div>
         ${description ? `<p class="detail-desc">${description}</p>` : ''}
@@ -968,7 +975,7 @@ function renderCategoryDetail(node) {
 function schemaPageUrl(type, extension, name) {
   const verPart = S.version && S.version !== '__default__' ? `/${S.version}` : '';
   const extPart = extension ? `/${extension}` : '';
-  const apiType = type === 'class' ? 'classes' : 'objects';
+  const apiType = type === 'class' ? 'classes' : type === 'object' ? 'objects' : 'categories';
   return `https://schema.ocsf.io${verPart}/${apiType}${extPart}/${name}`;
 }
 
