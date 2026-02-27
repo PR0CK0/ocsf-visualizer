@@ -308,6 +308,40 @@ body {
 .l-rect { width: 12px; height: 9px; border-radius: 2px; }
 .l-dia  { width: 9px; height: 9px; transform: rotate(45deg); border-radius: 1px; }
 
+/* ── Portrait / mobile layout ───────────────── */
+@media (orientation: portrait) {
+  #main {
+    flex-direction: column;
+  }
+
+  #cy {
+    flex: 1;
+    min-height: 0;
+  }
+
+  #detail-panel {
+    width: 100%;
+    min-width: unset;
+    height: 45%;
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+
+  label[for="version-select"] {
+    display: none;
+  }
+
+  #search-box {
+    max-width: 100%;
+  }
+
+  #legend {
+    gap: 8px;
+    padding: 4px 10px;
+    font-size: 10px;
+  }
+}
+
 /* ── Tooltip ────────────────────────────────── */
 #tooltip {
   position: fixed;
