@@ -111,7 +111,7 @@ body {
 /* ── Main layout ────────────────────────────── */
 #main { display: flex; flex: 1; overflow: hidden; position: relative; }
 
-#cy { flex: 1; background: var(--bg); }
+#cy { flex: 1; background: var(--bg); overflow: hidden; }
 
 /* ── Detail panel ───────────────────────────── */
 #detail-panel {
@@ -121,6 +121,8 @@ body {
   flex-shrink: 0;
   display: flex;
   overflow: hidden;
+  position: relative;
+  z-index: 1;
   transition: width 0.2s, height 0.2s;
 }
 
