@@ -148,6 +148,21 @@ body {
   min-width: 0;
   scrollbar-width: thin;
   scrollbar-color: var(--border) transparent;
+  container-type: inline-size;
+}
+
+@container (max-width: 300px) {
+  .detail-content       { padding: 10px; }
+  .detail-header h2     { font-size: 13px; }
+  .detail-meta          { font-size: 10px; }
+  .detail-desc          { font-size: 11px; }
+  .attr-section-header h3 { font-size: 11px; }
+  .attr-count           { font-size: 9px; }
+  .attr-name            { font-size: 11px; }
+  .attr-type            { font-size: 9px; }
+  .attr-desc            { font-size: 10px; }
+  .attr-item            { padding: 5px 7px; }
+  .attr-section         { margin-bottom: 8px; }
 }
 
 #main #detail-panel.collapsed {
